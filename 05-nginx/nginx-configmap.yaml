@@ -1,0 +1,46 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: nginx-config
+  namespace: default
+data:
+  nginx.conf: |
+    events {
+        worker_connections 1024;
+    }
+    
+    http {
+        upstream argocd {
+            server 152.53.145.17:30080;
+        }
+    
+        upstream jenkins {
+            server 152.53.145.17:30081;
+        }
+            
+        server {
+            listen 80;
+            server_name argocd.local;
+    
+            location / {
+                proxy_pass http://argocd;
+                proxy_set_header Host $host;
+                proxy_set_header X-Real-IP $remote_addr;
+                proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+                proxy_set_header X-Forwarded-Proto $scheme;
+            }
+        }
+    
+        server {
+            listen 80;
+            server_name jenkins.local;
+    
+            location / {
+                proxy_pass http://jenkins;
+                proxy_set_header Host $host;
+                proxy_set_header X-Real-IP $remote_addr;
+                proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+                proxy_set_header X-Forwarded-Proto $scheme;
+            }
+        }
+    }

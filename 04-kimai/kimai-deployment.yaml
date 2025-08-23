@@ -1,0 +1,34 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: kimai
+  namespace: kimai
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: kimai
+  template:
+    metadata:
+      labels:
+        app: kimai
+    spec:
+      containers:
+        - name: kimai
+          image: kimai/kimai2:apache
+          env:
+            - name: DATABASE_URL
+              value: "mysql://kimai:kimai@mysql-service:3306/kimai"
+            - name: TRUSTED_HOSTS
+              value: "kimai.local"
+            - name: APP_ENV
+              value: "prod"
+          ports:
+            - containerPort: 8001
+          volumeMounts:
+            - name: kimai-storage
+              mountPath: /opt/kimai/var
+      volumes:
+        - name: kimai-storage
+          persistentVolumeClaim:
+            claimName: kimai-pvc

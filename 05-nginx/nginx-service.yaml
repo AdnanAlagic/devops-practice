@@ -12,3 +12,7 @@ spec:
       port: 80
       targetPort: 80
       nodePort: 30090
+    - name: kimai
+      port: 8080
+      targetPort: 8080
+      nodePort: 30091

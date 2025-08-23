@@ -20,7 +20,7 @@ spec:
             - name: DATABASE_URL
               value: "mysql://kimai:kimai@mysql-service:3306/kimai"
             - name: TRUSTED_HOSTS
-              value: "kimai.local"
+              value: "kimai.local,152.53.145.17"
             - name: APP_ENV
               value: "prod"
           ports:
